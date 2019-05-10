@@ -37,17 +37,14 @@ class PJFExternalFuzzer(PJFExecutor):
             accept arguments form stdin, otherwise specify a command line. The special keyword "@@"
             will be replaced with the content of argument to fuzz
         """
-        self.logger = self.init_logger()
         if ["command"] not in configuration:
             raise PJFMissingArgument()
         self.fuzzer = None
         self.config = configuration
         super(PJFExternalFuzzer, self).__init__(configuration)
-        self.logger.debug("[{0}] - PJFExternalFuzzer successfully initialized".format(time.strftime("%H:%M:%S")))
 
     def execute_sigsegv(self, obj):
         self.execute(obj)
-        self.logger.debug("[{0}] - PJFExternalFuzzer successfully completed".format(time.strftime("%H:%M:%S")))
         return self.return_code in [-11, -6, -1]
 
     def execute(self, obj):
@@ -64,7 +61,6 @@ class PJFExternalFuzzer(PJFExecutor):
                     if "@@" in x:
                         self.config.command[self.config.command.index(x)] = x.replace("@@", obj)
                 self.spawn(self.config.command, timeout=2)
-            self.logger.debug("[{0}] - PJFExternalFuzzer successfully completed".format(time.strftime("%H:%M:%S")))
             return self._out
         except KeyboardInterrupt:
             return ""

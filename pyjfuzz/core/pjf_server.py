@@ -28,7 +28,6 @@ from .pjf_testcase_server import PJFTestcaseServer
 from .errors import PJFBaseException
 from .errors import PJFMissingArgument
 from threading import Thread
-from .pjf_logger import PJFLogger
 from .pjf_factory import PJFFactory
 from .certs import CERT_PATH
 import multiprocessing
@@ -79,7 +78,6 @@ class PJFServer:
     def __init__(self, configuration):
         self.client_queue = multiprocessing.Queue(0)
         self.apply_patch()
-        self.logger = self.init_logger()
         if ["debug", "html", "content_type", "notify", "ports"] not in configuration:
             raise PJFMissingArgument()
         if configuration.debug:
@@ -99,7 +97,6 @@ class PJFServer:
         self.httpd = multiprocessing.Process(target=run, kwargs={"server": self.http, "quiet": True})
         if self.config.fuzz_web:
             self.request_checker = Thread(target=self.request_pool, args=())
-        self.logger.debug("[{0}] - PJFServer successfully initialized".format(time.strftime("%H:%M:%S")))
 
     def run(self):
         """
@@ -168,7 +165,6 @@ class PJFServer:
         self.client_queue.put((0,0))
         if self.config.fuzz_web:
             self.request_checker.join()
-        self.logger.debug("[{0}] - PJFServer successfully completed".format(time.strftime("%H:%M:%S")))
 
     def custom_html(self, filepath):
         """
@@ -198,12 +194,6 @@ class PJFServer:
             yield fuzzed
         except Exception as e:
             raise PJFBaseException(e.message if hasattr(e, "message") else str(e))
-
-    def init_logger(self):
-        """
-        Init the default logger
-        """
-        return PJFLogger.init_logger()
 
     def apply_patch(self):
         """

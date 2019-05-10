@@ -38,7 +38,6 @@ class PJFProcessMonitor(PJFTestcaseServer, PJFExecutor):
         """
         Init the ProcessMonitor server
         """
-        self.logger = self.init_logger()
         if ["debug", "ports", "process_to_monitor"] not in configuration:
             raise PJFMissingArgument()
         self.config = configuration
@@ -51,7 +50,6 @@ class PJFProcessMonitor(PJFTestcaseServer, PJFExecutor):
                 self.config.ports["servers"]["TCASE_PORT"]
             ))
         super(PJFProcessMonitor, self).__init__(configuration)
-        self.logger.debug("[{0}] - PJFProcessMonitor successfully completed".format(time.strftime("%H:%M:%S")))
 
     def shutdown(self, *args):
         """
@@ -66,7 +64,6 @@ class PJFProcessMonitor(PJFTestcaseServer, PJFExecutor):
                 self.process.stderr.close()
             self.finished = True
             self.send_testcase('', '127.0.0.1', self.config.ports["servers"]["TCASE_PORT"])
-            self.logger.debug("[{0}] - PJFProcessMonitor successfully completed".format(time.strftime("%H:%M:%S")))
         except Exception as e:
             raise PJFBaseException(e.message if hasattr(e, "message") else str(e))
 

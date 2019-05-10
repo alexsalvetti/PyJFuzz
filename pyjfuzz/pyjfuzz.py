@@ -21,20 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from .core.pjf_logger import PJFLogger
 from .core import pjf_configuration
 import argparse
 import time
 
-
-def init_logger():
-    return PJFLogger.init_logger()
-
 def main():
-    logger = init_logger()
-
-    logger.debug("[{0}] - PyJFuzz successfully initialized".format(time.strftime("%H:%M:%S")))
-
     parser = argparse.ArgumentParser(description='PyJFuzz JSON Fuzzer (c) Mobile Security Lab - 2016',
                                      formatter_class=argparse.RawTextHelpFormatter)
 
@@ -117,8 +108,6 @@ def main():
     parser.add_argument('command', nargs='*', help='Command to execute')
 
     pjf_configuration.PJFConfiguration(parser.parse_args()).start()
-
-    logger.debug("[{0}] - PyJFuzz successfully completed".format(time.strftime("%H:%M:%S")))
 
 if __name__ == "__main__":
     main()

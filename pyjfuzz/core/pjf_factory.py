@@ -25,7 +25,6 @@ from .errors import PJFInvalidType, PJFMissingArgument, PJFBaseException
 from .pjf_mutators import PJFMutators
 from .pjf_mutation import PJFMutation
 from .pjf_encoder import PJFEncoder
-from .pjf_logger import PJFLogger
 import time
 import json
 import sys
@@ -40,7 +39,6 @@ class PJFFactory(object):
         """
         Class that represent a JSON object
         """
-        self.logger = self.init_logger()
         if ["json", "json_file", "strong_fuzz", "parameters", "exclude_parameters", "url_encode", "indent",
                 "utf8"] not in configuration:
             raise PJFMissingArgument("Some arguments are missing from PJFFactory object")
@@ -60,7 +58,6 @@ class PJFFactory(object):
                 self.json = other
             else:
                 self.json = json.dumps(other)
-        self.logger.debug("[{0}] - PJFFactory successfully initialized".format(time.strftime("%H:%M:%S")))
 
     def __add__(self, other):
         """
@@ -169,12 +166,6 @@ class PJFFactory(object):
         except Exception as e:
             raise PJFBaseException(e.message if hasattr(e, "message") else str(e))
         return element
-
-    def init_logger(self):
-        """
-        Init the default logger
-        """
-        return PJFLogger.init_logger()
 
     @property
     def fuzzed(self):

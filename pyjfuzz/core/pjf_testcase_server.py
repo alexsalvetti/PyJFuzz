@@ -26,13 +26,11 @@ import time
 import threading
 import struct
 import socket
-from .pjf_logger import PJFLogger
 from .errors import PJFMissingArgument, PJFBaseException, PJFSocketError
 
 
 class PJFTestcaseServer(object):
     def __init__(self, configuration):
-        self.logger = self.init_logger()
         if ["ports"] not in configuration:
             raise PJFMissingArgument("PJFTesecaseServer needs \"ports\" argument inside config object")
         self.config = configuration
@@ -42,7 +40,6 @@ class PJFTestcaseServer(object):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.bind(('', self.config.ports["servers"]["TCASE_PORT"]))
-        self.logger.debug("[{0}] - PJFTestcaseServer successfully initialized".format(time.strftime("%H:%M:%S")))
 
     def handle(self, sock):
         """
@@ -72,7 +69,6 @@ class PJFTestcaseServer(object):
             self._sock.close()
         except socket.error:
             pass
-        self.logger.debug("[{0}] - PJFTestcaseServer successfully completed".format(time.strftime("%H:%M:%S")))
 
     def increment_testcase(self):
         """
@@ -104,12 +100,6 @@ class PJFTestcaseServer(object):
         """
         self.starting = True
         threading.Thread(target=self.listen).start()
-
-    def init_logger(self):
-        """
-        Init the default logger
-        """
-        return PJFLogger.init_logger()
 
     @staticmethod
     def send_testcase(json, ip, port):

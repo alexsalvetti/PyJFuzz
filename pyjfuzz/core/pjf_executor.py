@@ -25,7 +25,6 @@ SOFTWARE.
 from .errors import PJFInvalidType, PJFProcessExecutionError, PJFBaseException
 from threading import Thread
 from subprocess import PIPE
-from .pjf_logger import PJFLogger
 from select import error
 import subprocess
 import signal
@@ -41,12 +40,10 @@ class PJFExecutor(object):
         """
         Init the main class
         """
-        self.logger = self.init_logger()
         self.process = None
         self._out = ""
         self.return_code = 0
         self._in = ""
-        self.logger.debug("[{0}] - PJFExecutor successfully initialized".format(time.strftime("%H:%M:%S")))
 
     def spawn(self, cmd, stdin_content="", stdin=False, shell=False, timeout=2):
         """
@@ -115,10 +112,3 @@ class PJFExecutor(object):
         self.process.stdin.close()
         self.process.stdout.close()
         self.process.stderr.close()
-        self.logger.debug("[{0}] - PJFExecutor successfully completed".format(time.strftime("%H:%M:%S")))
-
-    def init_logger(self):
-        """
-        Init the default logger
-        """
-        return PJFLogger.init_logger()
