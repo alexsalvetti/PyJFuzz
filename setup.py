@@ -52,7 +52,7 @@ def install_gramfuzz():
 install_gramfuzz()
 
 
-requires=['bottle', 'GitPython']
+requires=['bottle', 'GitPython==2.1.11']
 
 if sys.version_info < (2, 7):
     # support for python 2.6
